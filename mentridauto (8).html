@@ -68,7 +68,30 @@
       opacity: .6;
     }
 
+    /* CURSOR */
+    #cur-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--c-red);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform .12s var(--ease-out);
+    }
 
+    #cur-ring {
+      width: 30px;
+      height: 30px;
+      border: 1px solid rgba(140, 26, 26, 0.4);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width .3s var(--ease-out), height .3s var(--ease-out);
+    }
 
     /* NAV */
     .nav {
@@ -81,7 +104,7 @@
       padding: 0 64px;
       display: flex;
       align-items: center;
-      justify-content: flex-end; /* push items to right */
+      justify-content: space-between;
       transition: background .4s, border-color .4s, backdrop-filter .4s;
       border-bottom: 1px solid transparent;
       background: #FFFFFF; /* always white over video */
@@ -101,10 +124,16 @@
       transition: opacity .2s;
     }
 
-
-
     /* hero background video */
-
+    .hero-video-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.6; /* slightly transparent to lighten */
+    }
 
     .nav-logo img:hover {
       opacity: .8;
@@ -174,42 +203,18 @@
       position: relative;
       min-height: 100svh;
       display: grid;
-      grid-template-columns: 56fr 44fr;
+      grid-template-columns: 1fr;
       overflow: hidden;
-      background: #FFFFFF;
+      /*background removed to expose video*/
     }
 
-    .hero-video-bg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: saturate(0.8) brightness(1.05);
-      z-index: 0;
-    }
-
-    .hero-photo {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to right, #111111 0%, rgba(17, 17, 17, .15) 45%),
-        url("https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=1400&q=85") center/cover no-repeat;
-      filter: saturate(0.8) brightness(1.05);
-      z-index: 1;
-    }
-
-    /* decorative gradient line */
-    .hero::before {
+    /* dark overlay over video */
+    .hero::after {
       content: "";
       position: absolute;
-      top: 0;
-      right: 42%;
-      width: 1px;
-      height: 100%;
-      background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.05) 15%, rgba(0, 0, 0, 0.05) 85%, transparent);
-      z-index: 3;
-      transform: skewX(-5deg);
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 0;
     }
 
     /* decorative gradient line */
@@ -232,7 +237,8 @@
       flex-direction: column;
       justify-content: center;
       padding: 140px 72px 100px 72px;
-      background: linear-gradient(160deg, #FFFFFF 0%, #F9F9F9 100%);
+      background: transparent; /* removed white gradient so video shows */
+      color: #FFFFFF; /* make text white over darker video */
     }
 
     /* BIG LOGO */
@@ -271,21 +277,23 @@
     }
 
     .hero-title {
-      font-family: var(--ff-display);
-      font-size: clamp(4rem, 7vw, 8.5rem);
-      line-height: .88;
-      letter-spacing: .02em;
+      /* new typography and styling */
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(5rem, 8vw, 10rem);
+      line-height: 1;
+      letter-spacing: .08em;
       text-transform: uppercase;
       animation: fadeUp .9s .16s var(--ease-out) both;
-      color: var(--c-text);
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
     .hero-title .hl {
-      color: var(--c-red);
+      color: #ffc107; /* golden highlight */
     }
 
     .hero-title .out {
-      -webkit-text-stroke: 1.5px var(--c-text);
+      -webkit-text-stroke: 2px #ffffff;
       color: transparent;
       opacity: 1;
     }
@@ -293,10 +301,10 @@
     .hero-body {
       margin-top: 26px;
       max-width: 460px;
-      font-size: 1.1rem;
-      line-height: 1.75;
-      font-weight: 400;
-      color: var(--c-muted);
+      font-size: 1.25rem;
+      line-height: 1.6;
+      font-weight: 500;
+      color: #f0f0f0;
       animation: fadeUp .9s .24s var(--ease-out) both;
     }
 
@@ -1682,7 +1690,8 @@
 </head>
 
 <body>
-
+  <div id="cur-dot"></div>
+  <div id="cur-ring"></div>
 
   <!-- SVG ICONS DEFS -->
   <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -1771,7 +1780,7 @@
 
   <!-- NAV -->
   <nav class="nav" id="nav">
-    <!-- logo removed -->
+    <a href="#" class="nav-logo"><img src="45.png" alt="MENTRIDAUTO"></a>
     <ul class="nav-links">
       <li><a href="#servicios">Servicios</a></li>
       <li><a href="#nosotros">Nosotros</a></li>
@@ -1780,14 +1789,14 @@
       <li><a href="#opiniones">Opiniones</a></li>
       <li><a href="#contacto" class="nav-btn">Pedir Cita</a></li>
     </ul>
-    <a href="#" class="nav-logo"><img src="png/45.png" alt="MENTRIDAUTO"></a>
   </nav>
 
   <!-- HERO -->
   <section class="hero" id="inicio">
+    <video class="hero-video-bg" autoplay muted loop playsinline>
+      <source src="4.mp4" type="video/mp4">
+    </video>
     <div class="hero-left">
-      <!-- text column unchanged -->
-      <div class="hero-logo-big"><img src="logo.png" alt="MENTRIDAUTO"></div>
       <div class="hero-eyebrow">
         <div class="eyebrow-line"></div>
         <span class="eyebrow-txt">Taller Distinguido · Desde 2005</span>
@@ -1821,29 +1830,6 @@
         <div class="h-stat">
           <div class="sv">24<em>h</em></div>
           <div class="sl">Respuesta Rápida</div>
-        </div>
-      </div>
-    </div>
-    <div class="hero-right">
-      <video class="hero-video-bg" autoplay muted loop playsinline>
-        <source src="4.mp4" type="video/mp4">
-      </video>
-      <div class="hero-photo"></div>
-      <div class="hero-lines"></div>
-      <div class="hero-accent"></div>
-      <div class="hero-badge">
-        <svg class="badge-ring" viewBox="0 0 124 124">
-          <defs>
-            <path id="bp" d="M62,62 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0" />
-          </defs>
-          <text font-size="9" font-family="DM Mono, monospace" font-weight="500" fill="rgba(17,17,17,0.28)"
-            letter-spacing="3">
-            <textPath href="#bp">MENTRIDAUTO • TALLER DISTINGUIDO •</textPath>
-          </text>
-        </svg>
-        <div class="badge-center">
-          <div class="byr">2005</div>
-          <div class="bsb">Fundado</div>
         </div>
       </div>
     </div>
@@ -2314,6 +2300,7 @@
   </footer>
 
   <script>
+    const dot = document.getElementById("cur-dot"), ring = document.getElementById("cur-ring");
     let mx = 0, my = 0, rx = 0, ry = 0;
     document.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; });
     (function loop() { rx += (mx - rx) * .16; ry += (my - ry) * .16; dot.style.left = mx + "px"; dot.style.top = my + "px"; ring.style.left = rx + "px"; ring.style.top = ry + "px"; requestAnimationFrame(loop); })();
