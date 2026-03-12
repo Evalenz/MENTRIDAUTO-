@@ -41,8 +41,10 @@
 
     html {
       scroll-behavior: smooth;
+        /* avoid fixed header hiding anchored sections */
+        scroll-padding-top: 100px;
+        overflow-y: scroll;
     }
-
     body {
       font-family: var(--ff-body);
       background: var(--c-bg);
@@ -198,15 +200,21 @@
       filter: saturate(0.8) brightness(1.05);
       z-index: 1;
     }
-
-    /* decorative gradient line */
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 42%;
-      width: 1px;
-      height: 100%;
+      /* scroll hint arrow at bottom of hero-left */
+      .scroll-down {
+        position: absolute;
+        bottom: 32px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 24px;
+        color: var(--c-red);
+        animation: bounce 2s infinite;
+        z-index: 3;
+      }
+      @keyframes bounce {
+        0%,100% { transform: translate(-50%,0); }
+        50% { transform: translate(-50%,8px); }
+      }
       background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.05) 15%, rgba(0, 0, 0, 0.05) 85%, transparent);
       z-index: 3;
       transform: skewX(-5deg);
